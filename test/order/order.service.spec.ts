@@ -90,7 +90,7 @@ describe('OrderService', () => {
     expect(result.total).toBe(598.5);
   });
 
-  it('should return 0 when no items', () => {
+  it('should return 0 when order has no items', () => {
     const dto = {
       items: [],
       isMember: false,
@@ -99,5 +99,38 @@ describe('OrderService', () => {
     const result = service.calculate(dto);
 
     expect(result.total).toBe(0);
+  });
+
+  it('should NOT apply bundle discount when quantity is less than 2', () => {
+    const dto = {
+      items: [{ item: MenuItem.ORANGE, quantity: 1 }],
+      isMember: false,
+    };
+
+    const result = service.calculate(dto);
+
+    expect(result.total).toBe(120);
+  });
+
+  it('should apply bundle before member discount (promotion order)', () => {
+    const dto = {
+      items: [{ item: MenuItem.ORANGE, quantity: 2 }],
+      isMember: true,
+    };
+
+    const result = service.calculate(dto);
+
+    expect(result.total).toBe(205.2);
+  });
+
+  it('should handle large quantities correctly', () => {
+    const dto = {
+      items: [{ item: MenuItem.GREEN, quantity: 10 }],
+      isMember: false,
+    };
+
+    const result = service.calculate(dto);
+
+    expect(result.total).toBe(400);
   });
 });
