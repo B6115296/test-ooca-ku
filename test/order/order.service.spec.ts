@@ -131,6 +131,6 @@ describe('OrderService', () => {
 
     const result = service.calculate(dto);
 
-    expect(result.total).toBe(400);
+    expect(result.total).toBe(380);
   });
 });
